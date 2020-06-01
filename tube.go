@@ -36,14 +36,7 @@ func tubeOne(idx, num int) {
 	chk(t1.Out(gpio.Low))
 	chk(t2.Out(gpio.Low))
 	chk(t3.Out(gpio.Low))
-	switch idx {
-	case 1:
-		chk(t1.Out(gpio.High))
-	case 2:
-		chk(t2.Out(gpio.High))
-	case 3:
-		chk(t3.Out(gpio.High))
-	}
+	time.Sleep(1 * time.Millisecond)
 
 	chk(n4.Out(gpio.Low)) // 8
 	chk(n3.Out(gpio.Low)) // 4
@@ -61,6 +54,22 @@ func tubeOne(idx, num int) {
 	if num&0b0001 != 0 {
 		chk(n1.Out(gpio.High)) // 1
 	}
+
+	switch idx {
+	case 1:
+		chk(t1.Out(gpio.High))
+		chk(t2.Out(gpio.Low))
+		chk(t3.Out(gpio.Low))
+	case 2:
+		chk(t1.Out(gpio.Low))
+		chk(t2.Out(gpio.High))
+		chk(t3.Out(gpio.Low))
+	case 3:
+		chk(t1.Out(gpio.Low))
+		chk(t2.Out(gpio.Low))
+		chk(t3.Out(gpio.High))
+	}
+
 }
 
 func getStDigits(num int) (int, int, int) {

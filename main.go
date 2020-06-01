@@ -28,17 +28,18 @@ var (
 	n4, n3, n2, n1 gpio.PinOut
 
 	sleepBetweenEachTube int
+	tubeNum, tubeDigit   int
 )
 
 func init() {
 	flag.IntVar(&sleepBetweenEachTube, "b", 10, "sleep millisecons between tubes")
+	flag.IntVar(&tubeNum, "n", 0, "tube num")
+	flag.IntVar(&tubeDigit, "d", 0, "tube digit")
 }
 
 func main() {
 	flag.Parse()
 	fmt.Println("rpi-twitch-counter")
-
-	// tubeDigit := atoiMust(os.Args[1])
 
 	// Load all the drivers:
 	if _, err := host.Init(); err != nil {
@@ -54,11 +55,21 @@ func main() {
 	n2 = gpioreg.ByName(gpioN2)
 	n1 = gpioreg.ByName(gpioN1)
 
+	if tubeNum != 0 {
+		tubeOne(tubeNum, tubeDigit)
+		return
+	}
+
+	tubeOne(1, 10)
+	tubeOne(2, 10)
+	tubeOne(3, 10)
+	time.Sleep(3 * time.Second)
+
 	t := &tube{}
 	go t.Start()
 	for i := 0; i < 1000; i++ {
 		t.Set(i)
-		time.Sleep(time.Second)
+		time.Sleep(3 * time.Second)
 	}
 }
 
