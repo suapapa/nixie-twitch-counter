@@ -30,8 +30,7 @@ var (
 func main() {
 	fmt.Println("rpi-twitch-counter")
 
-	tubeNo := atoiMust(os.Args[1])
-	tubeDigit := atoiMust(os.Args[2])
+	tubeDigit := atoiMust(os.Args[1])
 
 	// Load all the drivers:
 	if _, err := host.Init(); err != nil {
@@ -47,7 +46,7 @@ func main() {
 	n2 = gpioreg.ByName(gpioN2)
 	n1 = gpioreg.ByName(gpioN1)
 
-	tube(tubeNo, tubeDigit)
+	tubeNum(tubeDigit)
 }
 
 func atoiMust(str string) int {

@@ -1,8 +1,37 @@
 package main
 
-import "periph.io/x/periph/conn/gpio"
+import (
+	"sync"
+	"time"
 
-func tube(idx, num int) {
+	"periph.io/x/periph/conn/gpio"
+)
+
+type tube struct {
+	no100st, no10st, no1st int
+	sync.RWMutex
+}
+
+func (t *tube) Start() {
+	for {
+		t.RLock()
+		tubeOne(1, t.no1st)
+		time.Sleep(3 * time.Millisecond)
+		tubeOne(2, t.no10st)
+		time.Sleep(3 * time.Millisecond)
+		tubeOne(3, t.no100st)
+		t.RUnlock()
+		time.Sleep(3 * time.Millisecond)
+	}
+}
+
+func (t *tube) Set(num int) {
+	t.Lock()
+	defer t.Unlock()
+	t.no100st, t.no10st, t.no1st = getStDigits(num)
+}
+
+func tubeOne(idx, num int) {
 	chk(t1.Out(gpio.Low))
 	chk(t2.Out(gpio.Low))
 	chk(t3.Out(gpio.Low))
@@ -31,4 +60,14 @@ func tube(idx, num int) {
 	if num&0b0001 != 0 {
 		chk(n1.Out(gpio.High)) // 1
 	}
+}
+
+func getStDigits(num int) (int, int, int) {
+	no1st := num % 10
+	num = num / 10
+	no10st := num % 10
+	num = num / 10
+	no100st := num % 10
+
+	return no100st, no10st, no1st
 }
