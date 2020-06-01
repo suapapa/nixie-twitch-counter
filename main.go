@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"math/rand"
 	"strconv"
 	"time"
 
@@ -28,13 +29,17 @@ var (
 	n4, n3, n2, n1 gpio.PinOut
 
 	sleepBetweenEachTube int
+	sleepBetweenEachNum  int
 	tubeNum, tubeDigit   int
 )
 
 func init() {
 	flag.IntVar(&sleepBetweenEachTube, "b", 10, "sleep millisecons between tubes")
+	flag.IntVar(&sleepBetweenEachNum, "bn", 30*1000, "sleep millisecons between num")
 	flag.IntVar(&tubeNum, "n", 0, "tube num")
 	flag.IntVar(&tubeDigit, "d", 0, "tube digit")
+
+	rand.Seed(time.Now().UnixNano())
 }
 
 func main() {
@@ -63,13 +68,16 @@ func main() {
 	tubeOne(1, 10)
 	tubeOne(2, 10)
 	tubeOne(3, 10)
-	time.Sleep(3 * time.Second)
+	time.Sleep(500 * time.Millisecond)
 
 	t := &tube{}
 	go t.Start()
-	for i := 0; i < 1000; i++ {
-		t.Set(i)
-		time.Sleep(3 * time.Second)
+	sleepDuration := time.Duration(sleepBetweenEachNum) * time.Millisecond
+	for {
+		n := rand.Intn(1000)
+		log.Printf("set tube to %d", n)
+		t.Set(n)
+		time.Sleep(sleepDuration)
 	}
 }
 

@@ -36,7 +36,6 @@ func tubeOne(idx, num int) {
 	chk(t1.Out(gpio.Low))
 	chk(t2.Out(gpio.Low))
 	chk(t3.Out(gpio.Low))
-	time.Sleep(1 * time.Millisecond)
 
 	chk(n4.Out(gpio.Low)) // 8
 	chk(n3.Out(gpio.Low)) // 4
