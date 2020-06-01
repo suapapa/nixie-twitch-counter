@@ -1,9 +1,9 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
-	"os"
 	"strconv"
 	"time"
 
@@ -26,12 +26,19 @@ const (
 var (
 	t1, t2, t3     gpio.PinIO
 	n4, n3, n2, n1 gpio.PinOut
+
+	sleepBetweenEachTube int
 )
 
+func init() {
+	flag.IntVar(&sleepBetweenEachTube, "b", 10, "sleep millisecons between tubes")
+}
+
 func main() {
+	flag.Parse()
 	fmt.Println("rpi-twitch-counter")
 
-	tubeDigit := atoiMust(os.Args[1])
+	// tubeDigit := atoiMust(os.Args[1])
 
 	// Load all the drivers:
 	if _, err := host.Init(); err != nil {

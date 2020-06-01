@@ -9,19 +9,20 @@ import (
 
 type tube struct {
 	no100st, no10st, no1st int
-	sync.RWMutex
+	sync.Mutex
 }
 
 func (t *tube) Start() {
+	sleepDuration := time.Duration(sleepBetweenEachTube) * time.Millisecond
 	for {
-		t.RLock()
+		t.Lock()
 		tubeOne(1, t.no1st)
-		time.Sleep(3 * time.Millisecond)
+		time.Sleep(sleepDuration)
 		tubeOne(2, t.no10st)
-		time.Sleep(3 * time.Millisecond)
+		time.Sleep(sleepDuration)
 		tubeOne(3, t.no100st)
-		t.RUnlock()
-		time.Sleep(3 * time.Millisecond)
+		t.Unlock()
+		time.Sleep(sleepDuration)
 	}
 }
 
