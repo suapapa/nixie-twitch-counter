@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 
 	"periph.io/x/periph/conn/gpio"
 	"periph.io/x/periph/conn/gpio/gpioreg"
@@ -46,7 +47,12 @@ func main() {
 	n2 = gpioreg.ByName(gpioN2)
 	n1 = gpioreg.ByName(gpioN1)
 
-	tubeNum(tubeDigit)
+	t := &tube{}
+	go t.Start()
+	for i := 0; i < 1000; i++ {
+		t.Set(i)
+		time.Sleep(time.Second)
+	}
 }
 
 func atoiMust(str string) int {
